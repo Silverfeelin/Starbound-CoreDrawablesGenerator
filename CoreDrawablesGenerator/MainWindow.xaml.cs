@@ -488,16 +488,12 @@ namespace CoreDrawablesGenerator
 
                 JObject descriptor = exporter.GetDescriptor(data.InventoryIcon);
 
-                TextWindow tw = new TextWindow(descriptor.ToString(Formatting.Indented));
+                TextWindow tw = new TextWindow(descriptor.ToString(Formatting.Indented), "Item Descriptor");
                 tw.ShowDialog();
             }
             catch (JsonReaderException exc)
             {
                 MessageBox.ShowDialog("The template does not appear to be valid JSON.\n\nException:\n" + exc.Message, "Error");
-            }
-            catch (ArgumentNullException)
-            {
-                MessageBox.ShowDialog("Argument may not be null. Did you select a valid image?", "Error");
             }
             catch (ArgumentException exc)
             {
@@ -515,17 +511,17 @@ namespace CoreDrawablesGenerator
 
         private void SpawnCommand_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            MessageBox.ShowDialog("Not implemented!", "Error");
         }
 
         private void InventoryIcon_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            MessageBox.ShowDialog("Not implemented!", "Error");
         }
 
         private void SingleTexture_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            MessageBox.ShowDialog("Not implemented!", "Error");
         }
 
         private Template GetTemplate()

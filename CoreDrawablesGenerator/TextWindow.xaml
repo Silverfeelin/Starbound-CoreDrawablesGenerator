@@ -1,5 +1,53 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Text Window" Width="600" Height="400">
-  <TextBox Name="text" AcceptsReturn="True"></TextBox>
+  <Grid>
+    <Grid.Styles>
+      <!-- Button Gradient -->
+      <Style Selector="Button">
+        <Setter Property="Button.Background">
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <LinearGradientBrush.GradientStops>
+              <GradientStop Offset="0" Color="#D3D3DB" />
+              <GradientStop Offset="1" Color="#EDEBEE"/>
+            </LinearGradientBrush.GradientStops>
+          </LinearGradientBrush>
+        </Setter>
+      </Style>
+      <Style Selector="Button:pointerover">
+        <Setter Property="Button.Background">
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <LinearGradientBrush.GradientStops>
+              <GradientStop Offset="0" Color="#E3E3EB" />
+              <GradientStop Offset="1" Color="#FDFBFe"/>
+            </LinearGradientBrush.GradientStops>
+          </LinearGradientBrush>
+        </Setter>
+      </Style>
+      <Style Selector="Button:pressed">
+        <Setter Property="Button.Background">
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <LinearGradientBrush.GradientStops>
+              <GradientStop Offset="0" Color="#C3C3CB" />
+              <GradientStop Offset="1" Color="#DDDBDE"/>
+            </LinearGradientBrush.GradientStops>
+          </LinearGradientBrush>
+        </Setter>
+      </Style>
+      <!-- Border "GroupBox" -->
+      <Style Selector="Border.group">
+        <Setter Property="Background" Value="#40000000"/>
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="BorderBrush" Value="#80000000"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="5 0 5 5"/>
+      </Style>
+    </Grid.Styles>
+    <TextBox Margin="5 5 5 5" Name="text" AcceptsReturn="True" TextWrapping="NoWrap"></TextBox>
+    <StackPanel Orientation="Horizontal" Gap="5" Margin="25" HorizontalAlignment="Right" VerticalAlignment="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible"> 
+      <Button Name="btnToggleFormatting" VerticalAlignment="Top">Toggle Formatting</Button>
+      <Button Name="btnSave" VerticalAlignment="Top">Save</Button>
+      <Button Name="btnCopy" VerticalAlignment="Top">Copy</Button>
+    </StackPanel>
+  </Grid>
 </Window>
