@@ -1,0 +1,202 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Box of Silver Sand"
+        Width="714" MinWidth="714" MaxWidth="714"
+        Height="395" MinHeight="395" MaxHeight="395"
+        FontSize="14">
+  <Grid>
+    <!-- Styles affect all controls in this grid -->
+    <Grid.Styles>
+      <!-- Button Gradient -->
+      <Style Selector="Button">
+        <Setter Property="Button.Background">
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <LinearGradientBrush.GradientStops>
+              <GradientStop Offset="0" Color="#D3D3DB" />
+              <GradientStop Offset="1" Color="#EDEBEE"/>
+            </LinearGradientBrush.GradientStops>
+          </LinearGradientBrush>
+        </Setter>
+      </Style>
+      <Style Selector="Button:pointerover">
+        <Setter Property="Button.Background">
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <LinearGradientBrush.GradientStops>
+              <GradientStop Offset="0" Color="#E3E3EB" />
+              <GradientStop Offset="1" Color="#FDFBFe"/>
+            </LinearGradientBrush.GradientStops>
+          </LinearGradientBrush>
+        </Setter>
+      </Style>
+      <Style Selector="Button:pressed">
+        <Setter Property="Button.Background">
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <LinearGradientBrush.GradientStops>
+              <GradientStop Offset="0" Color="#C3C3CB" />
+              <GradientStop Offset="1" Color="#DDDBDE"/>
+            </LinearGradientBrush.GradientStops>
+          </LinearGradientBrush>
+        </Setter>
+      </Style>
+      <!-- Border "GroupBox" -->
+      <Style Selector="Border.group">
+        <Setter Property="Background" Value="#40000000"/>
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="BorderBrush" Value="#80000000"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="5 0 5 5"/>
+      </Style>
+    </Grid.Styles>
+    
+    <!-- Background -->
+    <Image Name="imgBackground"
+           Source="resm:CoreDrawablesGenerator.Assets.Ice.png"
+           Stretch="UniformToFill"/>
+
+    <!-- Preview -->
+    <Border BorderBrush="#40000000" Width="396" Height="375"
+            CornerRadius="4"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Margin="10" BorderThickness="2">
+      <Grid Width="394" Height="373" ClipToBounds="True">
+        <Image Name="imgPreviewBackground"
+               Source="resm:CoreDrawablesGenerator.Assets.Natural.png"
+               Width="394" Height="373"/>
+        <Image Name="imgPreviewCharacter"
+               Source="resm:CoreDrawablesGenerator.Assets.previewCharSmall.png"
+               Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"
+               Margin="114 277 0 0"/>
+        <Image Name="imgPreview"
+               Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <Image Name="imgPreviewArm"
+               Source="resm:CoreDrawablesGenerator.Assets.normal.png"
+               Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"
+               Margin="108 273 0 0">
+          <Image.RenderTransform>
+            <TransformGroup>
+              <ScaleTransform/>
+              <RotateTransform Angle="-90"/>
+            </TransformGroup>
+          </Image.RenderTransform>
+        </Image>        
+      </Grid>
+    </Border>
+    
+    <!-- Controls -->
+    <StackPanel Margin="414 10 0 0" Width="290" Height="375"
+          HorizontalAlignment="Left" VerticalAlignment="Top"
+          Orientation="Vertical" Gap="10">
+      <StackPanel.Styles>
+        <Style Selector="TextBox.height">
+          <Setter Property="Height" Value="26"/>
+          <Setter Property="FontSize" Value="12"/>
+          <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
+        </Style>
+        <Style Selector="Button.height">
+          <Setter Property="Height" Value="26"/>
+        </Style>
+        <Style Selector="CheckBox">
+          <Setter Property="BorderBrush" Value="#80000000"/>
+        </Style>
+      </StackPanel.Styles>
+
+      <!-- Select File -->
+      <Border Classes="group">
+        <Grid>
+          <TextBlock Text="Image File:" FontWeight="Bold"
+                    ToolTip.Tip="The hand position is used to define the position of the image, relative to the hand.&#x0a;This value isn't used (correctly) by all generation methods."/>
+          <StackPanel Margin="5 20 5 0" Orientation="Horizontal" Gap="10">
+            <Button Name="btnSelectFile" Classes="height"
+                    Width="118"
+                    HorizontalAlignment="Left"
+                    BorderBrush="#707070" BorderThickness="1"
+                    ToolTip.Tip="Select an image file to create drawables for.">
+              Select File
+            </Button>
+            <CheckBox Name="chkIgnoreWhite" IsChecked="{Binding IgnoreWhite}"
+                      Content="Ignore White"
+                      ToolTip.Tip="Ignores fully white pixels (#FFFFFF). Use this if your image does not support transparency."/>
+          </StackPanel>
+        </Grid>
+      </Border>
+      
+      <!-- Hand Position -->
+      <Border Classes="group">
+        <Grid>
+          <TextBlock Text="Hand Position:" FontWeight="Bold"
+                    ToolTip.Tip="The hand position is used to define the position of the image, relative to the hand.&#x0a;This value isn't used (correctly) by all generation methods."/>
+          <StackPanel Orientation="Horizontal" Gap="5" Margin="5 20 5 0">
+            <TextBlock Name="lblHandPositionX" VerticalAlignment="Center" Text="X:"/>
+            <TextBox Name="tbxHandX" Classes="height"
+                      Width="101"
+                      Text="0" TextWrapping="NoWrap" TextAlignment="Right"
+                      ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      ToolTip.Tip="The horizontal hand position, in pixels, for the image in the current position.&#x0a;This value isn't used (correctly) by all generation methods."/>
+            <TextBlock Name="lblHandPositionY" VerticalAlignment="Center" Text="Y:"/>
+            <TextBox Name="tbxHandY" Classes="height"
+                      Width="101"
+                      Text="0" TextWrapping="NoWrap" TextAlignment="Right"
+                      ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      ToolTip.Tip="The vertical hand position, in pixels, for the image in the current position.&#x0a;This value isn't used (correctly) by all generation methods."/>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- Template -->
+      <Border Classes="group">
+        <Grid>
+          <TextBlock Text="Template:" FontWeight="Bold"
+                    ToolTip.Tip="The weapon template to use for supported generation methods."/>
+          <StackPanel Margin="5 20 5 0" Orientation="Vertical" Gap="4">
+            <DropDown Name="ddTemplate" Items="{Binding Templates}" HorizontalAlignment="Stretch"
+                      Background="White" Height="28"/>
+            <CheckBox Name="chkWeaponGroup" IsChecked="{Binding WeaponGroup}"
+                      HorizontalAlignment="Left"
+                      Content="Add 'weapon' group."
+                      ToolTip.Tip="Adding the 'weapon' transformation group will make the weapon rotate, move and scale properly.&#x0a;The positioning on the preview will not reflect the right positioning with this option enabled."/>
+            <CheckBox Name="chkInventoryIcon" IsChecked="{Binding InventoryIcon}"
+                      HorizontalAlignment="Left"
+                      Content="Add 'inventoryIcon'."
+                      ToolTip.Tip="Adds drawables for the inventory icon of the item.&#x0a;This is not recommended for larger drawables, due to the need to render twice as much."/>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- Generation -->
+      <Border Classes="group">
+        <Grid>
+          <TextBlock Text="Generate:" FontWeight="Bold"/>
+          <StackPanel Margin="5 20 5 0" Orientation="Vertical" Gap="2">
+            <Button Name="btnItemDescriptor" Classes="height"
+                    HorizontalAlignment="Stretch"
+                    BorderBrush="#707070" BorderThickness="1"
+                    Content="Item Descriptor"
+                    ToolTip.Tip="Generates an item descriptor and displays it in plain text.&#x0a;Uses the selected weapon template."/>
+            <Button Name="btnSpawnCommand" Classes="height"
+                    HorizontalAlignment="Stretch"
+                    BorderBrush="#707070" BorderThickness="1"
+                    Content="Spawn Command"
+                    ToolTip.Tip="Generates item parameters and displays it as a '/spawnitem' command.&#x0a;Uses the selected weapon template."/>
+            <Button Name="btnInventoryIcon" Classes="height"
+                    HorizontalAlignment="Stretch"
+                    BorderBrush="#707070" BorderThickness="1"
+                    Content="Inventory Icon"
+                    ToolTip.Tip="Generates an inventory icon and displays it in plain text.&#x0a;Uses the old drawables format."/>
+            <Grid>
+              <Button Name="btnSingleTexture" Classes="height"
+                      BorderBrush="#707070" BorderThickness="1"
+                      HorizontalAlignment="Left"
+                      Width="218"
+                      Content="Single Texture Directives"
+                      ToolTip.Tip="Generates directives for a single texture, for use outside of active items.&#x0a;The default scale is based on a 64x64 source image.&#x0a;Note: due to the way this feature works, the drawable can not be positioned automatically."/>
+              <TextBox Name="tbxSourceImageSize" Width="48" TextAlignment="Center" Classes="height" HorizontalAlignment="Right" Text="64"
+                       ToolTip.Tip="The smallest dimension of the source image you're applying the single texture directives to.&#x0a;Example: When applying your drawable to a 16x8 image, you should use the value 8."/>
+            </Grid>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- Image Size -->
+    </StackPanel>
+  </Grid>
+</Window>

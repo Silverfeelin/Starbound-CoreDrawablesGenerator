@@ -1,0 +1,27 @@
+{
+  "name": "commonpistol",
+  "count": 1,
+  "parameters": {
+    "animationCustom": {
+      "animatedParts": {
+        "parts": {
+          "butt": {
+            "properties": {
+              "image": "/assetmissing.png"
+            }
+          },
+          "middle": {
+            "properties": {
+              "image": "/assetmissing.png"
+            }
+          },
+          "barrel": {
+            "properties": {
+              "image": "/assetmissing.png"
+            }
+          }
+        }
+      }
+    }
+  }
+}
