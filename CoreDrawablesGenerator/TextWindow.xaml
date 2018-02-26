@@ -1,0 +1,5 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Text Window" Width="600" Height="400">
+  <TextBox Name="text" AcceptsReturn="True"></TextBox>
+</Window>

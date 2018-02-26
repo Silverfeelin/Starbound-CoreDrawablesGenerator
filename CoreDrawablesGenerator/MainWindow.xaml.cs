@@ -12,6 +12,10 @@ using SixLabors.ImageSharp;
 using Avalonia.Threading;
 using System.Collections.Generic;
 
+using CoreDrawablesGenerator.Generator;
+using CoreDrawablesGenerator.Exporter;
+using Newtonsoft.Json;
+
 namespace CoreDrawablesGenerator
 {
     public class MainWindow : Window
@@ -73,10 +77,25 @@ namespace CoreDrawablesGenerator
             SubscribeControls();
 
             // Initialize
-            CreateDirectories();
+            try
+            {
+                CreateDirectories();
+            }
+            catch(DirectoryNotFoundException d)
+            {
+                MessageBox.ShowDialog(d.Message, "Error");
+            }
+
             PopulateTemplates();
         }
 
+        #region Initialization
+
+        private void InitializeComponent()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
+        
         private void CreateDirectories()
         {
             dApp = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
@@ -156,6 +175,10 @@ namespace CoreDrawablesGenerator
             btnThemeDark.PointerEnter += Preview_PointerReleased;
         }
 
+        #endregion
+
+        #region Theme
+
         /// <summary>
         /// Changes the preview background.
         /// </summary>
@@ -169,6 +192,86 @@ namespace CoreDrawablesGenerator
 
             imgPreviewBackground.Source = (imgPreviewBackground.Resources[c.Tag] as AvaImage).Source;
         }
+
+        #endregion
+
+        #region Select File
+
+        private void SelectFile_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            SelectFileAsync();
+        }
+
+        private async void SelectFileAsync()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filters = new List<FileDialogFilter>()
+            {
+                new FileDialogFilter()
+                {
+                    Name = "Image files",
+                    Extensions = new List<string>()
+                    {
+                        "png", "jpg", "bmp"
+                    }
+                }
+            };
+            ofd.Title = "Select image.";
+
+            string[] files = await ofd.ShowAsync();
+            if (files != null && files.Length > 0)
+            {
+                UpdatePreview(files[0]);
+                WatchImage(files[0]);
+            }
+        }
+
+        private void StopWatching()
+        {
+            // Dispose previous, if any.
+            if (fileWatcher != null && !fileWatcher.IsDisposed)
+            {
+                fileWatcher.Dispose();
+            }
+            fileWatcher = null;
+        }
+
+        #endregion
+
+        #region FileWatcher
+
+        private void WatchImage(string file)
+        {
+            StopWatching();
+
+            // Watch file for changes.
+            fileWatcher = new FileWatcher(file);
+            fileWatcher.FileChanged += FileWatcher_FileChanged;
+            fileWatcher.FileDeleted += FileWatcher_FileDeleted;
+        }
+
+        /// <summary>
+        /// Can no longer track file for changes; keep using image in memory.
+        /// </summary>
+        private void FileWatcher_FileDeleted()
+        {
+            StopWatching();
+        }
+
+        /// <summary>
+        /// Update preview.
+        /// </summary>
+        private void FileWatcher_FileChanged()
+        {
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                UpdatePreview(fileWatcher.FilePath);
+            });
+        }
+
+        #endregion
+
+        #region Preview
 
         /// <summary>
         /// Start tracking movement.
@@ -284,74 +387,7 @@ namespace CoreDrawablesGenerator
                 UpdatePosition();
             }
         }
-
-        private void UpdatePosition()
-        {
-            try
-            {
-                x = Convert.ToInt32(tbxHandX.Text);
-                y = Convert.ToInt32(tbxHandY.Text);
-                imgPreview.Margin = new Thickness(PREVIEW_MARGIN_LEFT + x * 2, 0, 0, PREVIEW_MARGIN_BOTTOM + y * 2);
-            }
-            catch
-            {
-
-            }
-        }
-
-        private void SelectFile_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            SelectFileAsync();
-        }
-
-        private void ItemDescriptor_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            if (image == null)
-            {
-                MessageBox.ShowDialog("Please select an image first!", "Error");
-                return;
-            }
-        }
-
-        private void SpawnCommand_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void InventoryIcon_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SingleTexture_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        async void SelectFileAsync()
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filters = new List<FileDialogFilter>()
-            {
-                new FileDialogFilter()
-                {
-                    Name = "Image files",
-                    Extensions = new List<string>()
-                    {
-                        "png", "jpg", "bmp"
-                    }
-                }
-            };
-            ofd.Title = "Select image.";
-
-            string[] files = await ofd.ShowAsync();
-            if (files != null && files.Length > 0)
-            {
-                UpdatePreview(files[0]);
-                WatchImage(files[0]);
-            }
-        }
-
+        
         /// <summary>
         /// Updates the preview image, using the given file.
         /// </summary>
@@ -385,7 +421,7 @@ namespace CoreDrawablesGenerator
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Trace.TraceError(e.ToString());
 
@@ -403,53 +439,111 @@ namespace CoreDrawablesGenerator
             }
         }
 
-        private void StopWatching()
+        private void UpdatePosition()
         {
-            // Dispose previous, if any.
-            if (fileWatcher != null && !fileWatcher.IsDisposed)
+            try
             {
-                fileWatcher.Dispose();
+                x = Convert.ToInt32(tbxHandX.Text);
+                y = Convert.ToInt32(tbxHandY.Text);
+                imgPreview.Margin = new Thickness(PREVIEW_MARGIN_LEFT + x * 2, 0, 0, PREVIEW_MARGIN_BOTTOM + y * 2);
             }
-            fileWatcher = null;
-        }
-
-        private void WatchImage(string file)
-        {
-            StopWatching();
-
-            // Watch file for changes.
-            fileWatcher = new FileWatcher(file);
-            fileWatcher.FileChanged += FileWatcher_FileChanged;
-            fileWatcher.FileDeleted += FileWatcher_FileDeleted;
-        }
-
-        /// <summary>
-        /// Can no longer track file for changes; keep using image in memory.
-        /// </summary>
-        private void FileWatcher_FileDeleted()
-        {
-            StopWatching();
-        }
-
-        /// <summary>
-        /// Update preview.
-        /// </summary>
-        private void FileWatcher_FileChanged()
-        {
-            Dispatcher.UIThread.InvokeAsync(() =>
+            catch
             {
-                UpdatePreview(fileWatcher.FilePath);
-            });
+
+            }
         }
 
-        private void InitializeComponent()
+        #endregion
+
+        #region Export
+
+        private void ItemDescriptor_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            AvaloniaXamlLoader.Load(this);
+            if (image == null)
+            {
+                MessageBox.ShowDialog("Please select an image first!", "Error");
+                return;
+            }
+
+            try
+            {
+                DrawablesGenerator generator = new DrawablesGenerator(image);
+                generator.OffsetX = Convert.ToInt32(tbxHandX.Text) + 1;
+                generator.OffsetY = Convert.ToInt32(tbxHandY.Text);
+
+                generator.FlipY = true;
+                generator.ReplaceBlank = true;
+                generator.ReplaceWhite = true;
+
+                GeneratorDataBindings data = DataContext as GeneratorDataBindings;
+                if (data.IgnoreWhite)
+                    generator.IgnoreColor = new Rgba32(255, 255, 255, 255);
+
+                DrawablesOutput output = generator.Generate();
+                Template t = GetTemplate();
+
+                Exporter.Exporter exporter = new Exporter.Exporter(output, t.Config);
+                if (data.WeaponGroup)
+                    exporter.Groups.Add("weapon");
+
+                JObject descriptor = exporter.GetDescriptor(data.InventoryIcon);
+
+                TextWindow tw = new TextWindow(descriptor.ToString(Formatting.Indented));
+                tw.ShowDialog();
+            }
+            catch (JsonReaderException exc)
+            {
+                MessageBox.ShowDialog("The template does not appear to be valid JSON.\n\nException:\n" + exc.Message, "Error");
+            }
+            catch (ArgumentNullException)
+            {
+                MessageBox.ShowDialog("Argument may not be null. Did you select a valid image?", "Error");
+            }
+            catch (ArgumentException exc)
+            {
+                MessageBox.ShowDialog("Illegal argument:\n" + exc.Message, "Error");
+            }
+            catch (FormatException)
+            {
+                MessageBox.ShowDialog("Could not convert hand offsets to numbers.", "Error");
+            }
+            catch (Exception exc)
+            {
+                MessageBox.ShowDialog("Uncaught exception:\n" + exc.Message, "Error");
+            }
         }
 
-        private void RunOnUI(Action a)
+        private void SpawnCommand_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            Dispatcher.UIThread.InvokeAsync(a);
+            throw new NotImplementedException();
+        }
+
+        private void InventoryIcon_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SingleTexture_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Template GetTemplate()
+        {
+            if (ddTemplate.SelectedIndex == -1) ddTemplate.SelectedIndex = 0;
+
+            GeneratorDataBindings data = DataContext as GeneratorDataBindings;
+            return data.Templates[ddTemplate.SelectedIndex];
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Because I'd forget how to call it minutes after using it once.
+        /// </summary>
+        private async void RunOnUI(Action a)
+        {
+            await Dispatcher.UIThread.InvokeAsync(a);
         }
     }
 }

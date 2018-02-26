@@ -23,6 +23,7 @@
     <None Remove="Assets\Sword.json" />
     <None Remove="Assets\TeslaStaff.json" />
     <None Remove="MessageBox.xaml" />
+    <None Remove="TextWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\Dark.png" />
@@ -56,6 +57,9 @@
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="TextWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties Assets_4Gun_1json__JSONSchema=" " /></VisualStudio></ProjectExtensions>
