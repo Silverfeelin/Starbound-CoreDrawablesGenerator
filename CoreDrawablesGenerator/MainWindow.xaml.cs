@@ -27,7 +27,9 @@ namespace CoreDrawablesGenerator
         #region Controls
 
         [InjectControl]
-        private AvaImage imgPreview;
+        private AvaImage imgPreview, imgPreviewBackground;
+        [InjectControl]
+        private Grid gridPreview;
         [InjectControl]
         private Button btnSelectFile;
         [InjectControl]
@@ -45,7 +47,7 @@ namespace CoreDrawablesGenerator
         [InjectControl]
         private Button btnMove;
         [InjectControl]
-        private Grid gridPreview;
+        private Button btnThemeNatural, btnThemeLight, btnThemeDark;
 
         #endregion
 
@@ -144,6 +146,28 @@ namespace CoreDrawablesGenerator
             gridPreview.PointerMoved += Preview_PointerMoved;
             gridPreview.PointerReleased += Preview_PointerReleased;
             Deactivated += Preview_PointerReleased;
+
+            btnThemeNatural.Click += ChangeTheme_Click;
+            btnThemeLight.Click += ChangeTheme_Click;
+            btnThemeDark.Click += ChangeTheme_Click;
+
+            btnThemeNatural.PointerEnter += Preview_PointerReleased;
+            btnThemeLight.PointerEnter += Preview_PointerReleased;
+            btnThemeDark.PointerEnter += Preview_PointerReleased;
+        }
+
+        /// <summary>
+        /// Changes the preview background.
+        /// </summary>
+        private void ChangeTheme_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            Control c = sender as Control;
+
+            if (!imgPreviewBackground.Resources.ContainsKey(c.Tag))
+                    throw new ArgumentException("Unknown theme " + c.Tag);
+
+
+            imgPreviewBackground.Source = (imgPreviewBackground.Resources[c.Tag] as AvaImage).Source;
         }
 
         /// <summary>
@@ -216,7 +240,9 @@ namespace CoreDrawablesGenerator
             catch
             {
                 tbxHandX.Text = "0";
+                tbxHandX.InvalidateVisual();
                 tbxHandY.Text = "0";
+                tbxHandY.InvalidateVisual();
             }
         }
 
