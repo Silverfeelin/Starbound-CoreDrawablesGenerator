@@ -1,7 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CoreDrawablesGenerator
 {
@@ -22,13 +19,5 @@ namespace CoreDrawablesGenerator
         {
             return Key;
         }
-    }
-
-    public class DataBindings
-    {
-        public List<Template> Templates { get; set; } = new List<Template>();
-        public bool IgnoreWhite { get; set; } = true;
-        public bool WeaponGroup { get; set; } = false;
-        public bool InventoryIcon { get; set; } = false;
     }
 }

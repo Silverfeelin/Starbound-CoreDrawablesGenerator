@@ -58,7 +58,7 @@
             CornerRadius="4"
             HorizontalAlignment="Left" VerticalAlignment="Top"
             Margin="10" BorderThickness="2">
-      <Grid Width="394" Height="373" ClipToBounds="True">
+      <Grid Name="gridPreview" Width="394" Height="373" ClipToBounds="True">
         <Image Name="imgPreviewBackground"
                Source="resm:CoreDrawablesGenerator.Assets.Natural.png"
                Width="394" Height="373"/>
@@ -67,7 +67,9 @@
                Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"
                Margin="114 277 0 0"/>
         <Image Name="imgPreview"
-               Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+               Margin="20 0 0 20"
+               Width="64" Height="64"
+               Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
         <Image Name="imgPreviewArm"
                Source="resm:CoreDrawablesGenerator.Assets.normal.png"
                Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -128,16 +130,17 @@
           <StackPanel Orientation="Horizontal" Gap="5" Margin="5 20 5 0">
             <TextBlock Name="lblHandPositionX" VerticalAlignment="Center" Text="X:"/>
             <TextBox Name="tbxHandX" Classes="height"
-                      Width="101"
+                      Width="90"
                       Text="0" TextWrapping="NoWrap" TextAlignment="Right"
                       ScrollViewer.VerticalScrollBarVisibility="Hidden"
                       ToolTip.Tip="The horizontal hand position, in pixels, for the image in the current position.&#x0a;This value isn't used (correctly) by all generation methods."/>
             <TextBlock Name="lblHandPositionY" VerticalAlignment="Center" Text="Y:"/>
             <TextBox Name="tbxHandY" Classes="height"
-                      Width="101"
+                      Width="90"
                       Text="0" TextWrapping="NoWrap" TextAlignment="Right"
                       ScrollViewer.VerticalScrollBarVisibility="Hidden"
                       ToolTip.Tip="The vertical hand position, in pixels, for the image in the current position.&#x0a;This value isn't used (correctly) by all generation methods."/>
+            <Button Name="btnMove" Classes="height" HorizontalContentAlignment="Center" Width="45" Content="Move"/>
           </StackPanel>
         </Grid>
       </Border>

@@ -22,6 +22,7 @@
     <None Remove="Assets\previewCharSmall.png" />
     <None Remove="Assets\Sword.json" />
     <None Remove="Assets\TeslaStaff.json" />
+    <None Remove="MessageBox.xaml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\Dark.png" />
@@ -49,6 +50,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="MessageBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

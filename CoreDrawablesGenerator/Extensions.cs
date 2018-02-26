@@ -1,13 +1,13 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using SixLabors.ImageSharp;
 
 namespace CoreDrawablesGenerator
 {
-    public static class Extensions
+    public static class ExtensionMethods
     {
         /// <summary>
         /// Converts an ImageSharp Image to Avalonia Bitmap, for rendering.
+        /// When possible, avoid this! For static resources in XAML, use the "resm:" URI.
         /// </summary>
         /// <param name="resource">Image resource bytes.</param>
         /// <returns>Avalonia Bitmap.</returns>
