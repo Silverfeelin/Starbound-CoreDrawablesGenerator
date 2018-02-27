@@ -38,6 +38,7 @@ namespace CoreDrawablesGenerator
 
         #region Controls
 
+#pragma warning disable 0649
         [InjectControl]
         private AvaImage imgPreview, imgPreviewBackground;
         [InjectControl]
@@ -45,13 +46,9 @@ namespace CoreDrawablesGenerator
         [InjectControl]
         private Button btnSelectFile;
         [InjectControl]
-        private CheckBox chkIgnoreWhite;
-        [InjectControl]
         private TextBox tbxHandX, tbxHandY;
         [InjectControl]
         private DropDown ddTemplate;
-        [InjectControl]
-        private CheckBox chkWeaponGroup, chkInventoryIcon;
         [InjectControl]
         private Button btnItemDescriptor, btnSpawnCommand, btnInventoryIcon, btnSingleTexture;
         [InjectControl]
@@ -60,6 +57,7 @@ namespace CoreDrawablesGenerator
         private Button btnMove;
         [InjectControl]
         private Button btnThemeNatural, btnThemeLight, btnThemeDark;
+#pragma warning restore 0649
 
         #endregion
 

@@ -8,12 +8,14 @@ namespace CoreDrawablesGenerator
 {
     public class MessageBox : Window
     {
+#pragma warning disable 0649
         [InjectControl]
         private TextBlock tbxMessage;
 
         [InjectControl]
         private Button btnClose;
-        
+#pragma warning restore 0649
+
         public static void ShowDialog(string message, string title)
         {
             MessageBox mb = new MessageBox(message, title);

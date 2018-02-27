@@ -8,10 +8,12 @@ namespace CoreDrawablesGenerator
 {
     public class TextWindow : Window
     {
+#pragma warning disable 0649
         [InjectControl("text")]
         TextBox tbxText;
         [InjectControl]
         Button btnToggleFormatting, btnSave, btnCopy;
+#pragma warning restore 0649
 
         private string originalText;
         private bool formatted = true;
