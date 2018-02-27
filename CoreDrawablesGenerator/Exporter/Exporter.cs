@@ -21,7 +21,16 @@ namespace CoreDrawablesGenerator.Exporter
 
         public virtual string GetCommand(bool addInventoryIcon)
         {
-            throw new NotImplementedException();
+            JObject descriptor = GetDescriptor(addInventoryIcon);
+            return GenerateCommand(descriptor);
+        }
+
+        protected virtual string GenerateCommand(JObject descriptor)
+        {
+            string output = string.Format("/spawnitem {0} 1 '{1}'",
+                descriptor["name"].Value<string>(),
+                descriptor["parameters"].ToString(Newtonsoft.Json.Formatting.None));
+            return output;
         }
 
         public virtual JObject GetDescriptor(bool addInventoryIcon)
@@ -73,56 +82,10 @@ namespace CoreDrawablesGenerator.Exporter
 
             if (addInventoryIcon)
             {
-                parameters["inventoryIcon"] = GenerateInventoryIcon();
+                parameters["inventoryIcon"] = DrawablesGenerator.GenerateInventoryIcon(Output);
             }
 
             return descriptor;
-        }
-
-        private JArray GenerateInventoryIcon()
-        {
-            JArray drawables = new JArray();
-
-            for (int i = 0; i < Output.Drawables.GetLength(0); i++)
-            {
-                for (int j = 0; j < Output.Drawables.GetLength(1); j++)
-                {
-                    Drawable item = Output.Drawables[i, j];
-
-                    if (item == null) continue;
-
-                    JObject drawable = new JObject();
-                    drawable["image"] = item.ResultImage;
-
-                    bool cropH = false, cropV = false;
-                    int hRest = 0, vRest = 0;
-                    if (i == Output.Drawables.GetLength(0) - 1)
-                    {
-                        hRest = Output.ImageWidth % 32;
-                        if (hRest != 0)
-                            cropH = true;
-                    }
-                    if (j == Output.Drawables.GetLength(1) - 1)
-                    {
-                        vRest = Output.ImageHeight % 8;
-                        if (vRest != 0)
-                            cropH = true;
-                    }
-
-                    if (cropH || cropV)
-                    {
-
-                        drawable["image"] += "?crop;0;0;" + (cropH ? hRest : 32) + ";" + (cropV ? vRest : 8);
-                    }
-
-                    JArray position = new JArray();
-                    position.Add(item.X);
-                    position.Add(item.Y);
-                    drawable["position"] = position;
-                    drawables.Add(drawable);
-                }
-            }
-            return drawables;
         }
     }
 }

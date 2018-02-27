@@ -28,6 +28,14 @@ namespace CoreDrawablesGenerator
             PREVIEW_MARGIN_LEFT = 153,
             PREVIEW_MARGIN_BOTTOM = 67;
 
+        public GeneratorDataBindings Data
+        {
+            get
+            {
+                return DataContext as GeneratorDataBindings;
+            }
+        }
+
         #region Controls
 
         [InjectControl]
@@ -116,13 +124,11 @@ namespace CoreDrawablesGenerator
         private void PopulateTemplates()
         {
             ddTemplate.SelectedIndex = -1;
-
-            GeneratorDataBindings data = DataContext as GeneratorDataBindings;
-
+            
             // Get default templates
-            data.Templates.Add(new Template("Common Pistol", ResourceManager.TextResource(Properties.Resources.Gun)));
-            data.Templates.Add(new Template("Common Shortsword", ResourceManager.TextResource(Properties.Resources.Sword)));
-            data.Templates.Add(new Template("Tesla Staff", ResourceManager.TextResource(Properties.Resources.TeslaStaff)));
+            Data.Templates.Add(new Template("Common Pistol", ResourceManager.TextResource(Properties.Resources.Gun)));
+            Data.Templates.Add(new Template("Common Shortsword", ResourceManager.TextResource(Properties.Resources.Sword)));
+            Data.Templates.Add(new Template("Tesla Staff", ResourceManager.TextResource(Properties.Resources.TeslaStaff)));
 
             // Get user templates
             foreach (FileInfo file in dTemplates.EnumerateFiles())
@@ -131,7 +137,7 @@ namespace CoreDrawablesGenerator
                 {
                     JObject template = JObject.Parse(File.ReadAllText(file.FullName));
                     string fileName = Path.GetFileNameWithoutExtension(file.Name);
-                    data.Templates.Add(new Template(fileName, template));
+                    Data.Templates.Add(new Template(fileName, template));
                 }
                 catch(Exception e)
                 {
@@ -141,7 +147,7 @@ namespace CoreDrawablesGenerator
             }
 
             // Select first template.
-            if (data.Templates.Count > 0)
+            if (Data.Templates.Count > 0)
                 ddTemplate.SelectedIndex = 0;
         }
 
@@ -474,26 +480,21 @@ namespace CoreDrawablesGenerator
                 generator.FlipY = true;
                 generator.ReplaceBlank = true;
                 generator.ReplaceWhite = true;
-
-                GeneratorDataBindings data = DataContext as GeneratorDataBindings;
-                if (data.IgnoreWhite)
+                
+                if (Data.IgnoreWhite)
                     generator.IgnoreColor = new Rgba32(255, 255, 255, 255);
 
                 DrawablesOutput output = generator.Generate();
                 Template t = GetTemplate();
 
                 Exporter.Exporter exporter = new Exporter.Exporter(output, t.Config);
-                if (data.WeaponGroup)
+                if (Data.WeaponGroup)
                     exporter.Groups.Add("weapon");
 
-                JObject descriptor = exporter.GetDescriptor(data.InventoryIcon);
+                JObject descriptor = exporter.GetDescriptor(Data.InventoryIcon);
 
                 TextWindow tw = new TextWindow(descriptor.ToString(Formatting.Indented), "Item Descriptor");
                 tw.ShowDialog();
-            }
-            catch (JsonReaderException exc)
-            {
-                MessageBox.ShowDialog("The template does not appear to be valid JSON.\n\nException:\n" + exc.Message, "Error");
             }
             catch (ArgumentException exc)
             {
@@ -511,25 +512,128 @@ namespace CoreDrawablesGenerator
 
         private void SpawnCommand_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            MessageBox.ShowDialog("Not implemented!", "Error");
+            if (image == null)
+            {
+                MessageBox.ShowDialog("Please select an image first!", "Error");
+                return;
+            }
+
+            try
+            {
+                DrawablesGenerator generator = new DrawablesGenerator(image);
+                generator.OffsetX = Convert.ToInt32(tbxHandX.Text);
+                generator.OffsetY = Convert.ToInt32(tbxHandY.Text);
+
+                generator.FlipY = true;
+
+                if (Data.IgnoreWhite)
+                    generator.IgnoreColor = new Rgba32(255, 255, 255, 255);
+
+                DrawablesOutput output = generator.Generate();
+                Template t = GetTemplate();
+
+                Exporter.Exporter exporter = new Exporter.Exporter(output, t.Config);
+                if (Data.WeaponGroup)
+                    exporter.Groups.Add("weapon");
+
+                string command = exporter.GetCommand(Data.InventoryIcon);
+
+                TextWindow tw = new TextWindow(command, "Spawn Command");
+                tw.ShowDialog();
+            }
+            catch (ArgumentException exc)
+            {
+                MessageBox.ShowDialog("Illegal argument:\n" + exc.Message, "Error");
+            }
+            catch (FormatException)
+            {
+                MessageBox.ShowDialog("Could not convert hand offsets to numbers.", "Error");
+            }
+            catch (Exception exc)
+            {
+                MessageBox.ShowDialog("Uncaught exception:\n" + exc.Message, "Error");
+            }
         }
 
         private void InventoryIcon_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            MessageBox.ShowDialog("Not implemented!", "Error");
+            if (image == null)
+            {
+                MessageBox.ShowDialog("Please select an image first!", "Error");
+                return;
+            }
+
+            try
+            {
+                DrawablesGenerator generator = new DrawablesGenerator(image);
+
+                generator.FlipY = true;
+
+                if (Data.IgnoreWhite)
+                    generator.IgnoreColor = new Rgba32(255, 255, 255, 255);
+                
+                DrawablesOutput output = generator.Generate();
+
+                TextWindow tw = new TextWindow(DrawablesGenerator.GenerateInventoryIcon(output).ToString(Formatting.Indented), "Inventory Icon");
+                tw.ShowDialog();
+            }
+            catch (ArgumentNullException)
+            {
+                MessageBox.ShowDialog("Argument may not be null. Did you select a valid image?", "Error");
+            }
+            catch (DrawableException exc)
+            {
+                MessageBox.ShowDialog(exc.Message, "Error");
+            }
         }
 
         private void SingleTexture_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            MessageBox.ShowDialog("Not implemented!", "Error");
+            if (image == null)
+            {
+                MessageBox.ShowDialog("Please select an image first!", "Error");
+                return;
+            }
+
+            try
+            {
+                DrawablesGenerator generator = new DrawablesGenerator(image);
+                generator.OffsetX = Convert.ToInt32(tbxHandX.Text);
+                generator.OffsetY = Convert.ToInt32(tbxHandY.Text);
+
+                generator.FlipY = true;
+
+                generator.ReplaceBlank = true;
+                generator.ReplaceWhite = true;
+
+                if (Data.IgnoreWhite)
+                    generator.IgnoreColor = new Rgba32(255, 255, 255, 255);
+
+                DrawablesOutput output = generator.Generate();
+
+                int j = int.Parse(tbxSourceImageSize.Text);
+                TextWindow tw = new TextWindow(DrawablesGenerator.GenerateSingleTextureDirectives(output, j), "Single Texture Directives");
+                tw.ShowDialog();
+            }
+            catch (ArgumentNullException)
+            {
+                MessageBox.ShowDialog("Could not parse the hand position or the source image size (text field next to the button). Please hover over it for more information.", "Error");
+            }
+            catch (FormatException)
+            {
+                MessageBox.ShowDialog("Could not parse the hand position or source image size (text field next to the button). Please hover over it for more information.", "Error");
+            }
+            catch (DrawableException exc)
+            {
+                MessageBox.ShowDialog(exc.Message, "Error");
+            }
         }
 
         private Template GetTemplate()
         {
             if (ddTemplate.SelectedIndex == -1) ddTemplate.SelectedIndex = 0;
-
-            GeneratorDataBindings data = DataContext as GeneratorDataBindings;
-            return data.Templates[ddTemplate.SelectedIndex];
+            
+            return Data.Templates[ddTemplate.SelectedIndex];
         }
 
         #endregion

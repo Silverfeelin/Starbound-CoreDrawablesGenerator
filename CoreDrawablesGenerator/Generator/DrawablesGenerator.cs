@@ -1,4 +1,5 @@
-﻿using SixLabors.ImageSharp;
+﻿using Newtonsoft.Json.Linq;
+using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -240,6 +241,74 @@ namespace CoreDrawablesGenerator.Generator
             }
 
             return template;
+        }
+        
+        public static JArray GenerateInventoryIcon(DrawablesOutput output)
+        {
+            JArray drawables = new JArray();
+
+            for (int i = 0; i < output.Drawables.GetLength(0); i++)
+            {
+                for (int j = 0; j < output.Drawables.GetLength(1); j++)
+                {
+                    Drawable item = output.Drawables[i, j];
+
+                    if (item == null) continue;
+
+                    JObject drawable = new JObject();
+                    drawable["image"] = item.ResultImage;
+
+                    bool cropH = false, cropV = false;
+                    int hRest = 0, vRest = 0;
+                    if (i == output.Drawables.GetLength(0) - 1)
+                    {
+                        hRest = output.ImageWidth % 32;
+                        if (hRest != 0)
+                            cropH = true;
+                    }
+                    if (j == output.Drawables.GetLength(1) - 1)
+                    {
+                        vRest = output.ImageHeight % 8;
+                        if (vRest != 0)
+                            cropH = true;
+                    }
+
+                    if (cropH || cropV)
+                    {
+
+                        drawable["image"] += "?crop;0;0;" + (cropH ? hRest : 32) + ";" + (cropV ? vRest : 8);
+                    }
+
+                    JArray position = new JArray();
+                    position.Add(item.X);
+                    position.Add(item.Y);
+                    drawable["position"] = position;
+                    drawables.Add(drawable);
+                }
+            }
+            return drawables;
+        }
+
+        public static string GenerateSingleTextureDirectives(DrawablesOutput output, int baseScale = 64)
+        {
+            int w = output.ImageWidth,
+                h = output.ImageHeight;
+
+            int max = w > h ? w : h;
+            int scale = (int)Math.Ceiling((double)max / baseScale);
+
+            StringBuilder dir = new StringBuilder();
+            dir.AppendFormat("?setcolor=ffffff?replace;00000000=ffffff;ffffff00=ffffff?setcolor=ffffff?scalenearest={0}?crop=0;0;{1};{2}", scale, w, h);
+
+            foreach (Drawable drawable in output.Drawables)
+            {
+                if (drawable != null)
+                    dir.AppendFormat("?blendmult={0};{1};{2}{3}", drawable.Texture, -drawable.X, -drawable.Y, drawable.Directives);
+            }
+
+            dir.Append("?replace;ffffffff=00000000");
+
+            return dir.ToString();
         }
     }
 }
