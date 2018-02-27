@@ -25,14 +25,20 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\Dark.png" />
-    <EmbeddedResource Include="Assets\Gun.json" />
+    <EmbeddedResource Include="Assets\Gun.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Assets\Ice.png" />
     <EmbeddedResource Include="Assets\Light.png" />
     <EmbeddedResource Include="Assets\Natural.png" />
     <EmbeddedResource Include="Assets\normal.png" />
     <EmbeddedResource Include="Assets\previewCharSmall.png" />
-    <EmbeddedResource Include="Assets\Sword.json" />
-    <EmbeddedResource Include="Assets\TeslaStaff.json" />
+    <EmbeddedResource Include="Assets\Sword.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\TeslaStaff.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.6.1" />

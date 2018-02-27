@@ -122,12 +122,13 @@ namespace CoreDrawablesGenerator
         private void PopulateTemplates()
         {
             ddTemplate.SelectedIndex = -1;
-            
-            // Get default templates
-            Data.Templates.Add(new Template("Common Pistol", ResourceManager.TextResource(Properties.Resources.Gun)));
-            Data.Templates.Add(new Template("Common Shortsword", ResourceManager.TextResource(Properties.Resources.Sword)));
-            Data.Templates.Add(new Template("Tesla Staff", ResourceManager.TextResource(Properties.Resources.TeslaStaff)));
 
+            // Get default templates
+            Assembly resourceAssembly = GetType().GetTypeInfo().Assembly;
+            Data.Templates.Add(new Template("Common Pistol", ResourceManager.TextResource(resourceAssembly, "CoreDrawablesGenerator.Assets.Gun.json")));
+            Data.Templates.Add(new Template("Common Shortsword", ResourceManager.TextResource(resourceAssembly, "CoreDrawablesGenerator.Assets.Sword.json")));
+            Data.Templates.Add(new Template("Tesla Staff", ResourceManager.TextResource(resourceAssembly, "CoreDrawablesGenerator.Assets.TeslaStaff.json")));
+            
             // Get user templates
             foreach (FileInfo file in dTemplates.EnumerateFiles())
             {

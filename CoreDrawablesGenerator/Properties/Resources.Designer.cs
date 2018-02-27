@@ -63,30 +63,27 @@ namespace CoreDrawablesGenerator.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] Gun {
+        internal static object Gun {
             get {
-                object obj = ResourceManager.GetObject("Gun", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetObject("Gun", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] Sword {
+        internal static object Sword {
             get {
-                object obj = ResourceManager.GetObject("Sword", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetObject("Sword", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] TeslaStaff {
+        internal static object TeslaStaff {
             get {
-                object obj = ResourceManager.GetObject("TeslaStaff", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetObject("TeslaStaff", resourceCulture);
             }
         }
     }
