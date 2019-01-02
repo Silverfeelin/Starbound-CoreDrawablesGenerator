@@ -37,7 +37,8 @@ namespace CoreDrawablesGenerator
 
         private void ToggleFormatting_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            formatted = !formatted;
+            bool opposite = !formatted;
+            formatted = opposite;
             tbxText.Text = formatted ? originalText : originalText.Replace(Environment.NewLine, "").Replace(" ", "");
             tbxText.TextWrapping = formatted ? Avalonia.Media.TextWrapping.NoWrap : Avalonia.Media.TextWrapping.Wrap;
         }

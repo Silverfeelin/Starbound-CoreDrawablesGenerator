@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">
@@ -41,8 +41,17 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.6.1" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.6.1" />
+    <PackageReference Include="Avalonia" Version="0.6.2-build5117-beta" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.6.2-build5117-beta" />
+    <PackageReference Include="Avalonia.Direct2D1" Version="0.6.2-build5117-beta" />
+    <PackageReference Include="Avalonia.Gtk3" Version="0.6.2-build5117-beta" />
+    <PackageReference Include="Avalonia.HtmlRenderer" Version="0.6.2-build5117-beta" />
+    <PackageReference Include="Avalonia.LinuxFramebuffer" Version="0.6.2-build5117-beta" />
+    <PackageReference Include="Avalonia.MonoMac" Version="0.6.2-build5117-beta" />
+    <PackageReference Include="Avalonia.Remote.Protocol" Version="0.6.2-build5117-beta" />
+    <PackageReference Include="Avalonia.Skia" Version="0.6.2-build5117-beta" />
+    <PackageReference Include="Avalonia.Win32" Version="0.6.2-build5117-beta" />
+    <PackageReference Include="Avalonia.Win32.Interoperability" Version="0.6.2-build5117-beta" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0002" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0002" />

@@ -16,10 +16,10 @@ namespace CoreDrawablesGenerator
         private Button btnClose;
 #pragma warning restore 0649
 
-        public static void ShowDialog(string message, string title)
+        public static async void ShowDialog(string message, string title)
         {
             MessageBox mb = new MessageBox(message, title);
-            mb.ShowDialog();
+            await mb.ShowDialog();
         }
 
         private MessageBox()
